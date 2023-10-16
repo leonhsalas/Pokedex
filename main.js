@@ -1,4 +1,15 @@
-document.addEventListener("DOMContentLoaded",function(){  
+document.addEventListener("DOMContentLoaded",function(){
+    const imgOptions = {};
+    const imgObserver = new IntersectionObserver
+    ((entries, imgObserver)=>{
+      entries.forEach((entry)=>{
+            if(!entry.isIntersecting) return;
+            const img = entry.target
+            var dataImage = img.getAttribute("data-image")
+            img.src = dataImage
+            imgObserver.unobserve(img)
+    })
+    },imgOptions) 
     const fetchPokemons = async(endpoint)=>{
         let data;
         try {
@@ -59,14 +70,16 @@ document.addEventListener("DOMContentLoaded",function(){
             divitem.appendChild(img)
 
             container.appendChild(divitem); 
+            imgObserver.observe(img)
         });
 
         console.log(pokemons);
     }
     var numero = 1;
-    getPokemons(1)
+    getPokemons(numero)
     var toggle = false;
-    btnicono.addEventListener("click",function(){
+    const btni = document.getElementById("btnicono")
+    btni.addEventListener("click",function(){
         toggle = !toggle;
         getPokemons(numero,toggle)
     })
@@ -90,11 +103,11 @@ document.addEventListener("DOMContentLoaded",function(){
         <label for="${geners[i]}" class="label-gens">${geners[i]}</label>`
     }
     filters.innerHTML=gen;
-    filters.addEventListener("click",function(e){
-        let targ = e.target.type
+    filters.addEventListener("click",function(f){
+        let targ = f.target.type
         if(targ == "radio"){
-            getPokemons(e.target.value,toggle)
-            title.innerHTML="Pokemon" + e.target.id;
+            getPokemons(f.target.value,toggle)
+            title.innerHTML="Pokemon" + f.target.id;
         }
     })
 
